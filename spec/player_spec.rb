@@ -1,0 +1,18 @@
+require_relative '../lib/player'
+
+describe Player do
+  describe '#player_input' do
+    subject(:player_player_input) { described_class.new('white') }
+    context 'when user input is wrong once and then fullfill regex' do
+      before do
+        allow(player_player_input).to receive(:gets).and_return('Wrong123!@#!@#', 'Correct')
+      end
+      it 'returns the user input' do
+        error_message = 'Please insert correct info'
+        regex = /^[A-Za-z]{3,7}$/
+        expect(player_player_input).to receive(:puts).with(error_message).once
+        expect(player_player_input.player_input(regex, error_message)).to eq('Correct')
+      end
+    end
+  end
+end
