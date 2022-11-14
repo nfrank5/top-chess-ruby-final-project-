@@ -1,5 +1,6 @@
 require_relative '../lib/board'
 
+
 describe Board do
   describe '#empty?' do
     subject(:board_empty) { described_class.new }
@@ -20,20 +21,35 @@ describe Board do
   end
 
   describe '#can_be_taken?' do
-    subject(:board_empty) { described_class.new }
+    subject(:board_can_be_taken) { described_class.new }
+    let(:queen_can_be_taken) { instance_double(Queen) }
+    let(:king_can_be_taken) { instance_double(King) }
     context 'when the pieces are different color' do
+      before do
+        allow(queen_can_be_taken).to receive(:different_color?).and_return(true)
+      end
       it 'returns true' do
-        expect(board_empty.empty?([0,0])).to be true
+        board_can_be_taken.current_board[0][0] = queen_can_be_taken
+        board_can_be_taken.current_board[0][1] = king_can_be_taken
+        expect(board_can_be_taken.can_be_taken?([0,0], [0,1])).to be true
       end
     end
 
     context 'when the pieces are the same color' do
       before do
-        board_empty.current_board[0][0] = 1
+        allow(queen_can_be_taken).to receive(:different_color?).and_return(false)
       end
       it 'returns false' do
-        expect(board_empty.empty?([0,0])).to be false
+        board_can_be_taken.current_board[0][0] = queen_can_be_taken
+        board_can_be_taken.current_board[0][1] = king_can_be_taken
+        expect(board_can_be_taken.can_be_taken?([0,0], [0,1])).to be false
       end
     end
+  end
+
+  describe '#outside_board?' do
+
+
+
   end
 end

@@ -15,7 +15,6 @@ class Board
   end
 
   def can_be_taken?(origin, destiny)
-    p @current_board
     @current_board[origin[0]][origin[1]].different_color?(current_board[destiny[0]][destiny[1]])
   end
 
