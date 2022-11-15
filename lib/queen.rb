@@ -15,7 +15,7 @@ class Queen < Piece
       new_position = position.slice(0..-1)
       loop do
         new_position = update_new_position(direction, new_position)
-        break if board.outside_board(new_position)
+        break if board.outside_board?(new_position)
 
         if board.empty?(new_position)
           @moves.push(new_position)

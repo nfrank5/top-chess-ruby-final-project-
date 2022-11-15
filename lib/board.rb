@@ -18,39 +18,18 @@ class Board
     @current_board[origin[0]][origin[1]].different_color?(current_board[destiny[0]][destiny[1]])
   end
 
-  def outside_board(new_position)
+  def outside_board?(new_position)
     !new_position[0].between?(0, 7) || !new_position[1].between?(0, 7)
   end
 
-  def update_board(player1, player2)
-    player1.pieces.each do |piece|
-      current_board[piece.position[0]][piece.position[1]] = piece
-    end
-    player2.pieces.each do |piece|
-      current_board[piece.position[0]][piece.position[1]] = piece
-    end
-  end
-
-
-
-
-
-
-
-
-
-
   def print_board
-    puts "   0 1 2 3 4 5 6 7"
-
+    puts '   0 1 2 3 4 5 6 7'
     @current_board.each_with_index do |row, i|
-      if i%2 == 0
+      if i.even?
         puts "#{i}  "+"#{format_square(row[0])}".bg_blue + "#{format_square(row[1])}".bg_green + "#{format_square(row[2])}".bg_blue+"#{format_square(row[3])}".bg_green + "#{format_square(row[4])}".bg_blue+"#{format_square(row[5])}".bg_green + "#{format_square(row[6])}".bg_blue + "#{format_square(row[7])}".bg_green
       else
         puts "#{i}  "+"#{format_square(row[0])}".bg_green + "#{format_square(row[1])}".bg_blue + "#{format_square(row[2])}".bg_green+"#{format_square(row[3])}".bg_blue + "#{format_square(row[4])}".bg_green + "#{format_square(row[5])}".bg_blue + "#{format_square(row[6])}".bg_green+"#{format_square(row[7])}".bg_blue
-
       end
-
     end
     puts "\n\t"
   end

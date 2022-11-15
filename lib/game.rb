@@ -21,7 +21,7 @@ class Game
   end
 
   def introduction
-    current_board.update_board(player_one, player_two)
+    update_board
     current_board.print_board
   end
 
@@ -31,6 +31,15 @@ class Game
 
   def ending
     1
+  end
+
+  def update_board
+    player_one.pieces.each do |piece|
+      current_board.current_board[piece.position[0]][piece.position[1]] = piece
+    end
+    player_two.pieces.each do |piece|
+      current_board.current_board[piece.position[0]][piece.position[1]] = piece
+    end
   end
 
 end

@@ -14,9 +14,8 @@ class King < Piece
 
   def valid_moves(board)
     DIRECTIONS_KING.map do |direction|
-
       new_position = update_new_position(position.slice(0..-1), direction)
-      next if board.outside_board(new_position)
+      next if board.outside_board?(new_position)
 
       if board.empty?(new_position)
         @moves.push(new_position)
