@@ -16,7 +16,7 @@ describe Board do
         board_empty.current_board[0][0] = 1
       end
       it 'returns false' do
-        expect(board_empty.empty?([0,0])).to be false
+        expect(board_empty.empty?([0, 0])).to be false
       end
     end
   end

@@ -27,7 +27,7 @@ describe Piece do
 
   describe '#update_new_position?' do
     subject(:piece_update_new_position) { described_class.new('white',"\u2655",[7, 3]) }
-    context 'when the current position is [3, 3]' do
+    context 'when the current position is [3, 3] and the direction is [1, 1]' do
       it 'returns the sum of the direction and the current position [4, 4]' do
         expect(piece_update_new_position.update_new_position([3, 3],[1, 1])).to match_array([4, 4])
       end

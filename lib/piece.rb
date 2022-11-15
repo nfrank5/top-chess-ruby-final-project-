@@ -12,8 +12,8 @@ class Piece
     @color != other_piece.color
   end
 
-  def update_new_position(direction, new_position)
-    [direction[0] + new_position[0], direction[1] + new_position[1]]
+  def update_new_position(direction, position)
+    [direction[0] + position[0], direction[1] + position[1]]
   end
 
 end

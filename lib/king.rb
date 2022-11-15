@@ -11,7 +11,6 @@ class King < Piece
     @first_move = true
   end
 
-
   def valid_moves(board)
     DIRECTIONS_KING.map do |direction|
       new_position = update_new_position(position.slice(0..-1), direction)
@@ -27,7 +26,5 @@ class King < Piece
       end
     end
   end
-
-
 end
 
