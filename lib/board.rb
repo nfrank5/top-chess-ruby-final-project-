@@ -22,6 +22,25 @@ class Board
     !new_position[0].between?(0, 7) || !new_position[1].between?(0, 7)
   end
 
+
+  def winner?(current_player)
+
+
+
+  end
+
+  def check?(current_player, other_player)
+    all_pieces_moves = []
+    current_player.pieces.each do |piece|
+      all_pieces_moves = piece.moves | all_pieces_moves
+      
+    end
+    return true if all_pieces_moves.include?(other_player.players_king.position)
+
+    false
+  end
+
+
   def print_board
     puts '   0 1 2 3 4 5 6 7'
     @current_board.each_with_index do |row, i|

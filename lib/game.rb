@@ -10,6 +10,7 @@ class Game
     @player_two = Player.new('black')
     @current_board = Board.new
     @current_player = player_one
+    @other_player = player_two
   end
 
   def play
@@ -26,7 +27,10 @@ class Game
   end
 
   def moving_pieces
-    1
+    until current_board.winner?(current_player) do
+      break 
+
+    end
   end
 
   def ending

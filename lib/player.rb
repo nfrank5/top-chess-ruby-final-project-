@@ -18,4 +18,9 @@ class Player
     @name = player_input(/^[A-Za-z0-9]{3,10}$/, 'Please insert a alphanumeric name between 3 and 10 characters')
   end
 
+  def players_king
+    pieces.each do |piece|
+      return piece if piece.instance_of(King)
+    end
+  end
 end
