@@ -20,7 +20,18 @@ class Player
 
   def players_king
     pieces.each do |piece|
-      return piece if piece.instance_of(King)
+      return piece if piece.instance_of?(King)
     end
   end
+
+  def remove_piece(position)
+    pieces.each do |piece|
+      if piece.position == position
+        pieces.delete(piece) 
+        return true
+      end
+    end
+    false
+  end
+
 end

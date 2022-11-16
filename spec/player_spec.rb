@@ -15,4 +15,13 @@ describe Player do
       end
     end
   end
+
+  describe '#remove_piece' do
+    subject(:player_remove_piece) { described_class.new('white') }
+    context 'when the piece has the position' do
+      it 'removes it from the pieces array' do
+        expect { player_remove_piece.remove_piece([7, 4]) }.to change(player_remove_piece.pieces, :count).by(-1)
+      end
+    end
+  end
 end
