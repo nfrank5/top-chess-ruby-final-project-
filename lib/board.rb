@@ -14,7 +14,7 @@ class Board
     @current_board[destiny[0]][destiny[1]].nil?
   end
 
-  def can_be_taken?(origin, destiny)
+  def enemy_piece?(origin, destiny)
     @current_board[origin[0]][origin[1]].different_color?(current_board[destiny[0]][destiny[1]])
   end
 
@@ -29,25 +29,38 @@ class Board
 
   end
 
-  def check?(current_player, other_player)
-    all_pieces_moves = []
-    current_player.pieces.each do |piece|
-      all_pieces_moves = piece.moves | all_pieces_moves
-      
-    end
-    return true if all_pieces_moves.include?(other_player.players_king.position)
+  def piece_by_position(position)
+    current_board[position[0]][position[1]]
+  end
+
+  def check?(checker, checked)
+    return true if checker.all_pieces_moves.include?(checked.players_king.position)
 
     false
   end
 
+  def hypothetical_check?(current_position, new_position)
+    hypothetical_board = current_board.slice(0..-1)
+    hypothetical_board.current_board[new_position[0]][new_position[1]] =  hypothetical_board.current_board[current_position[0]][current_position[1]]
+    hypothetical_board.current_board[current_position[0]][current_position[1]] = nil
+    hypothetical_board
+  end
+
+
+
+  def update_board(player)
+    player.pieces.each do |piece|
+      current_board[piece.position[0]][piece.position[1]] = piece
+    end
+  end
 
   def print_board
     puts '   0 1 2 3 4 5 6 7'
     @current_board.each_with_index do |row, i|
       if i.even?
-        puts "#{i}  "+"#{format_square(row[0])}".bg_blue + "#{format_square(row[1])}".bg_green + "#{format_square(row[2])}".bg_blue+"#{format_square(row[3])}".bg_green + "#{format_square(row[4])}".bg_blue+"#{format_square(row[5])}".bg_green + "#{format_square(row[6])}".bg_blue + "#{format_square(row[7])}".bg_green
-      else
         puts "#{i}  "+"#{format_square(row[0])}".bg_green + "#{format_square(row[1])}".bg_blue + "#{format_square(row[2])}".bg_green+"#{format_square(row[3])}".bg_blue + "#{format_square(row[4])}".bg_green + "#{format_square(row[5])}".bg_blue + "#{format_square(row[6])}".bg_green+"#{format_square(row[7])}".bg_blue
+      else
+        puts "#{i}  "+"#{format_square(row[0])}".bg_blue + "#{format_square(row[1])}".bg_green + "#{format_square(row[2])}".bg_blue+"#{format_square(row[3])}".bg_green + "#{format_square(row[4])}".bg_blue+"#{format_square(row[5])}".bg_green + "#{format_square(row[6])}".bg_blue + "#{format_square(row[7])}".bg_green
       end
     end
     puts "\n\t"
