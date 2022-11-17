@@ -1,6 +1,6 @@
 class Piece
-  attr_reader :position, :unicode, :color, :moves
-
+  attr_reader :unicode, :color, :moves
+  attr_accessor :position
   def initialize(color, unicode, position)
     @color = color
     @unicode = unicode
@@ -14,6 +14,10 @@ class Piece
 
   def update_new_position(direction, position)
     [direction[0] + position[0], direction[1] + position[1]]
+  end
+
+  def target_included_in_moves(target)
+    moves.include?(target)
   end
 
 end
