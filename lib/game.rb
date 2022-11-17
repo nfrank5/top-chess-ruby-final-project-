@@ -38,6 +38,7 @@ class Game
       update_game
       switch_turn
       clear_screen
+      puts "#{current_player.color} King is in Check!" if current_board.check?(other_player, current_player)
       current_board.print_board
       
     end
@@ -98,7 +99,6 @@ class Game
     current_board.piece_by_position(target).position = current
     current_board.current_board[target[0]][target[1]] = nil
   end
-
 
   def switch_turn
     temp = @current_player
