@@ -24,9 +24,7 @@ class Board
 
 
   def winner?(current_player)
-
-
-
+    nil
   end
 
   def piece_by_position(position)
@@ -38,15 +36,6 @@ class Board
 
     false
   end
-
-  def hypothetical_check?(current_position, new_position)
-    hypothetical_board = current_board.slice(0..-1)
-    hypothetical_board.current_board[new_position[0]][new_position[1]] =  hypothetical_board.current_board[current_position[0]][current_position[1]]
-    hypothetical_board.current_board[current_position[0]][current_position[1]] = nil
-    hypothetical_board
-  end
-
-
 
   def update_board(player)
     player.pieces.each do |piece|

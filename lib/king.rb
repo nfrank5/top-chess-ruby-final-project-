@@ -6,7 +6,7 @@ class King < Piece
 
   attr_reader :first_move
   def initialize(color)
-    super(color, color == 'white' ? "\u2654" : "\u265A", color == 'white' ? [7, 4] : [0, 4])
+    super(color, color == 'white' ? [7, 4] : [0, 4], color == 'white' ? "\u2654" : "\u265A")
     @first_move = true
   end
 
@@ -26,7 +26,7 @@ class King < Piece
       end
     end
 
-    if first_move #falta agregar castling moves
+    if first_move #falta agregar castling moves, para eso primero crear Class Rook
 
 
     end

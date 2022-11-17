@@ -1,7 +1,7 @@
 class Piece
   attr_reader :unicode, :color, :moves
   attr_accessor :position
-  def initialize(color, unicode, position)
+  def initialize(color, position, unicode)
     @color = color
     @unicode = unicode
     @position = position
@@ -20,13 +20,6 @@ class Piece
     moves.include?(target)
   end
 
-end
-
-class Rook < Piece
-  def initialize
-    super
-    @first_move = true
-  end
 end
 
 class Bishop < Piece

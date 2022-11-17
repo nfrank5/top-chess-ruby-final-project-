@@ -1,18 +1,15 @@
 require_relative './piece'
-require_relative './board'
+DIRECTIONS_ROOK = [[1, 0], [0, 1], [-1, 0], [0, -1]]
 
-
-
-class Queen < Piece
-  DIRECTIONS_QUEEN = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
-
-  def initialize(color)
-    super(color, color == 'white' ? [7, 3] : [0, 3], color == 'white' ? "\u2655" : "\u265B")
+class Rook < Piece
+  def initialize(color, position)
+    super(color, position, color == 'white' ? "\u2656" : "\u265C")
+    @first_move = true
   end
 
   def valid_moves(board)
     @moves = []
-    DIRECTIONS_QUEEN.map do |direction|
+    DIRECTIONS_ROOK.map do |direction|
       new_position = position.slice(0..-1)
       loop do
         new_position = update_new_position(direction, new_position)
@@ -29,5 +26,4 @@ class Queen < Piece
       end 
     end
   end
-
 end
