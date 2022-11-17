@@ -1,6 +1,8 @@
 require_relative './utilities'
 require_relative './king'
 require_relative './queen'
+#require_relative './board'
+
 
 class Player
   include Utilities
@@ -34,4 +36,23 @@ class Player
     false
   end
 
+  def all_pieces_moves
+    all_moves = []
+    pieces.each do |piece|
+      all_moves = piece.moves | all_moves
+    end
+    all_moves
+  end
+
+  def update_valid_moves(board)
+    pieces.each do |piece|
+      piece.valid_moves(board)
+    end
+  end
+
 end
+jugador = Player.new('white')
+
+#tablero = Board.new
+#jugador.update_valid_moves(tablero)
+#p jugador
