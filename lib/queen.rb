@@ -11,6 +11,7 @@ class Queen < Piece
   end
 
   def valid_moves(board)
+    @moves = []
     DIRECTIONS_QUEEN.map do |direction|
       new_position = position.slice(0..-1)
       loop do
@@ -19,7 +20,7 @@ class Queen < Piece
 
         if board.empty?(new_position)
           @moves.push(new_position)
-        elsif board.can_be_taken?(position, new_position)
+        elsif board.enemy_piece?(position, new_position)
           @moves.push(new_position)
           break
         else
