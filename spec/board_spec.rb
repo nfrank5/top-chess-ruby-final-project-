@@ -23,29 +23,29 @@ describe Board do
     end
   end
 
-  describe '#can_be_taken?' do
-    subject(:board_can_be_taken) { described_class.new }
-    let(:queen_can_be_taken) { instance_double(Queen) }
-    let(:king_can_be_taken) { instance_double(King) }
+  describe '#enemy_piece?' do
+    subject(:board_enemy_piece) { described_class.new }
+    let(:queen_enemy_piece) { instance_double(Queen) }
+    let(:king_enemy_piece) { instance_double(King) }
     context 'when the pieces are different color' do
       before do
-        allow(queen_can_be_taken).to receive(:different_color?).and_return(true)
+        allow(queen_enemy_piece).to receive(:different_color?).and_return(true)
       end
       it 'returns true' do
-        board_can_be_taken.current_board[0][0] = queen_can_be_taken
-        board_can_be_taken.current_board[0][1] = king_can_be_taken
-        expect(board_can_be_taken.can_be_taken?([0,0], [0,1])).to be true
+        board_enemy_piece.current_board[0][0] = queen_enemy_piece
+        board_enemy_piece.current_board[0][1] = king_enemy_piece
+        expect(board_enemy_piece.enemy_piece?([0,0], [0,1])).to be true
       end
     end
 
     context 'when the pieces are the same color' do
       before do
-        allow(queen_can_be_taken).to receive(:different_color?).and_return(false)
+        allow(queen_enemy_piece).to receive(:different_color?).and_return(false)
       end
       it 'returns false' do
-        board_can_be_taken.current_board[0][0] = queen_can_be_taken
-        board_can_be_taken.current_board[0][1] = king_can_be_taken
-        expect(board_can_be_taken.can_be_taken?([0,0], [0,1])).to be false
+        board_enemy_piece.current_board[0][0] = queen_enemy_piece
+        board_enemy_piece.current_board[0][1] = king_enemy_piece
+        expect(board_enemy_piece.enemy_piece?([0,0], [0,1])).to be false
       end
     end
   end
@@ -75,7 +75,7 @@ describe Board do
       before do
         allow(player_one_check).to receive(:pieces).and_return([queen_check])
         allow(player_two_check).to receive(:players_king).and_return(king_check)
-        allow(queen_check).to receive(:moves).and_return([[0, 4]])
+        allow(player_one_check).to receive(:all_pieces_moves).and_return([[0, 4]])
         allow(king_check).to receive(:position).and_return([0, 4])
       end
       it 'returns true' do
@@ -93,4 +93,5 @@ describe Board do
       end
     end
   end
+
 end

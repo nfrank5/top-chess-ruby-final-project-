@@ -24,4 +24,16 @@ describe Player do
       end
     end
   end
+
+  describe '#all_pieces_moves' do
+    subject(:player_all_pieces_moves) { described_class.new('white') }
+    context 'when the game begins' do
+      before do
+
+      end
+      xit 'returns the sum off all potential moves of the pieces' do
+   
+      end
+    end
+  end
 end
