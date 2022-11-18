@@ -2,6 +2,8 @@ require_relative './utilities'
 require_relative './king'
 require_relative './queen'
 require_relative './rook'
+require_relative './pawn'
+
 
 #require_relative './board'
 
@@ -16,7 +18,16 @@ class Player
     @name = nil
     @pieces = [King.new(color), Queen.new(color),
                Rook.new(color, color == 'white' ? [7, 0] : [0, 0]),
-               Rook.new(color, color == 'white' ? [7, 7]:[0, 7])]
+               Rook.new(color, color == 'white' ? [7, 7] : [0, 7]),
+               Pawn.new(color, color == 'white' ? [6, 0] : [1, 0]),
+               Pawn.new(color, color == 'white' ? [6, 1] : [1, 1]),
+               Pawn.new(color, color == 'white' ? [6, 2] : [1, 2]),
+               Pawn.new(color, color == 'white' ? [6, 3] : [1, 3]),
+               Pawn.new(color, color == 'white' ? [6, 4] : [1, 4]),
+               Pawn.new(color, color == 'white' ? [6, 5] : [1, 5]),
+               Pawn.new(color, color == 'white' ? [6, 6] : [1, 6]),
+               Pawn.new(color, color == 'white' ? [6, 7] : [1, 7])
+              ]
   end
 
   def players_name

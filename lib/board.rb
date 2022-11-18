@@ -15,7 +15,9 @@ class Board
   end
 
   def enemy_piece?(origin, destiny)
-    @current_board[origin[0]][origin[1]].different_color?(current_board[destiny[0]][destiny[1]])
+    return false if piece_by_position(destiny).nil?
+
+    piece_by_position(origin).different_color?(piece_by_position(destiny))
   end
 
   def outside_board?(new_position)

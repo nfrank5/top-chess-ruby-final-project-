@@ -153,7 +153,7 @@ class Game
   end
 
   def first_move_update(target)
-    if [King, Rook].include? current_board.piece_by_position(target).class
+    if [King, Rook, Pawn].include? current_board.piece_by_position(target).class
       current_board.piece_by_position(target).first_move = false
     end
   end
