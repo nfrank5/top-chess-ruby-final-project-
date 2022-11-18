@@ -14,7 +14,9 @@ class Player
   def initialize(color)
     @color = color
     @name = nil
-    @pieces = [King.new(color), Queen.new(color), Rook.new(color, color == 'white' ? [7, 0]:[0, 0]), Rook.new(color, color == 'white' ? [7, 7]:[0, 7])]
+    @pieces = [King.new(color), Queen.new(color),
+               Rook.new(color, color == 'white' ? [7, 0] : [0, 0]),
+               Rook.new(color, color == 'white' ? [7, 7]:[0, 7])]
   end
 
   def players_name

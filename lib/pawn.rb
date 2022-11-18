@@ -1,6 +1,9 @@
 require_relative './piece'
 
 class Pawn < Piece
+
+  attr_accessor :first_move
+
   def initialize(color)
     super(color, color == 'white' ? "\u2659" : "\u265F", position)
     @first_move = true

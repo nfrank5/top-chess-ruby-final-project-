@@ -4,7 +4,8 @@ require_relative './board'
 class King < Piece
   DIRECTIONS_KING = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
 
-  attr_reader :first_move
+  attr_accessor :first_move
+
   def initialize(color)
     super(color, color == 'white' ? [7, 4] : [0, 4], color == 'white' ? "\u2654" : "\u265A")
     @first_move = true
@@ -26,9 +27,31 @@ class King < Piece
       end
     end
 
-    if first_move #falta agregar castling moves, para eso primero crear Class Rook
-
-
+    if first_move #castling
+      [[0, 0], [0, 7], [7, 0], [7, 7]].each do |corner|
+        piece = board.piece_by_position(corner)
+        if !piece.nil? && piece.instance_of?(Rook) && piece.color == color && piece.first_move
+          case corner
+          when [0, 0]
+            if board.current_board[0][3].nil? && board.current_board[0][2].nil? && board.current_board[0][1].nil?
+              @moves.push([0, 2])
+            end
+          when [0, 7]
+            if board.current_board[0][5].nil? && board.current_board[0][6].nil?
+              @moves.push([0, 6])
+            end
+          when [7, 0]
+            if board.current_board[7][3].nil? && board.current_board[7][2].nil? && board.current_board[7][1].nil?
+              @moves.push([7, 2])
+            end
+          when [7, 7]
+            if board.current_board[7][5].nil? && board.current_board[7][6].nil?
+              @moves.push([7, 6])
+            end
+          end
+          
+        end
+      end
     end
   end
 end

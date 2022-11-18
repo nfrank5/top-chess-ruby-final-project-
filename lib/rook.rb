@@ -1,7 +1,9 @@
 require_relative './piece'
-DIRECTIONS_ROOK = [[1, 0], [0, 1], [-1, 0], [0, -1]]
 
 class Rook < Piece
+  DIRECTIONS_ROOK = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+  attr_accessor :first_move
+
   def initialize(color, position)
     super(color, position, color == 'white' ? "\u2656" : "\u265C")
     @first_move = true
