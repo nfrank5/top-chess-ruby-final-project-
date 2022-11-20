@@ -3,6 +3,10 @@ require_relative './king'
 require_relative './queen'
 require_relative './rook'
 require_relative './pawn'
+require_relative './bishop'
+require_relative './knight'
+
+
 
 
 #require_relative './board'
@@ -26,7 +30,11 @@ class Player
                Pawn.new(color, color == 'white' ? [6, 4] : [1, 4]),
                Pawn.new(color, color == 'white' ? [6, 5] : [1, 5]),
                Pawn.new(color, color == 'white' ? [6, 6] : [1, 6]),
-               Pawn.new(color, color == 'white' ? [6, 7] : [1, 7])
+               Pawn.new(color, color == 'white' ? [6, 7] : [1, 7]),
+               Bishop.new(color, color == 'white' ? [7, 2] : [0, 2]),
+               Bishop.new(color, color == 'white' ? [7, 5] : [0, 5]),
+               Knight.new(color, color == 'white' ? [7, 1] : [0, 1]),
+               Knight.new(color, color == 'white' ? [7, 6] : [0, 6])
               ]
   end
 

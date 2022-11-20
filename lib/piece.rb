@@ -19,14 +19,4 @@ class Piece
   def target_included_in_moves(target)
     moves.include?(target)
   end
-
 end
-
-class Bishop < Piece
-end
-
-
-class Knight < Piece
-
-end
-
