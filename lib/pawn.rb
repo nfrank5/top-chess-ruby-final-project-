@@ -3,10 +3,12 @@ require_relative './piece'
 class Pawn < Piece
   DIRECTIONS_PAWN = { 'white' => [[-1, -1], [-1, 1], [-1, 0], [-2, 0]], 'black' => [[1, -1], [1, 1], [1, 0], [2, 0]]}.freeze
   attr_accessor :first_move
+  attr_accessor :en_passant
 
   def initialize(color, position)
     super(color, position, color == 'white' ? "\u2659" : "\u265F")
     @first_move = true
+    @en_passant = false
   end
 
   def valid_moves(board)
@@ -25,11 +27,6 @@ class Pawn < Piece
         @moves.push(new_position)
       end
     end
+    @moves.push(@en_passant) if @en_passant
   end
 end
-
-#peon_1 = Pawn.new('white', [1,2])
-#peon_2 = Pawn.new('black', [1,2])
-
-#p peon_1
-#p peon_2

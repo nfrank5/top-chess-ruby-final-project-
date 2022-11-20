@@ -64,10 +64,4 @@ class Player
       piece.valid_moves(board)
     end
   end
-
 end
-jugador = Player.new('white')
-
-#tablero = Board.new
-#jugador.update_valid_moves(tablero)
-#p jugador

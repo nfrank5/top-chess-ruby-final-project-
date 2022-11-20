@@ -47,6 +47,7 @@ class Game
         successful_move = move(current_position_and_target[0], current_position_and_target[1])
       end
       first_move_update(current_position_and_target[1])
+      active_en_passant(current_position_and_target[1])
       update_game
       switch_turn
       clear_screen
@@ -76,11 +77,14 @@ class Game
 
   def move(current, target)
     castling = attempting_castling?(current, target)
-    if valid_move?(current, target) && valid_castling?(current, target)
+    en_passant = attempting_en_passant?(current, target)
+
+    if valid_en_passant?(current, target) && valid_move?(current, target) && valid_castling?(current, target) 
       temp = switch_positions(current, target)
       update_game
       unless current_board.check?(other_player, current_player)
         switch_positions(TOWER_MOVE_FOR_CASTLING[target][0], TOWER_MOVE_FOR_CASTLING[target][1]) if castling
+        remove_en_passant_pawn(target) if en_passant
         return true
       end
       undo_switch_positions(current, target, temp)
@@ -97,11 +101,33 @@ class Game
   end
 
   def valid_castling?(current, target)
-    if attempting_castling?(current, target) && (current_board.check?(other_player, current_player) || other_player.all_pieces_moves.include?(PASSING_KING_SQUARES_CASTLING[target]))
+    if attempting_castling?(current, target) && (current_board.check?(other_player, current_player) ||
+                           other_player.all_pieces_moves.include?(PASSING_KING_SQUARES_CASTLING[target]))
       puts 'Invalid castling'
       return false
     end
     true
+  end
+
+  def attempting_en_passant?(current, target)
+    return false unless current_board.piece_by_position(current).instance_of?(Pawn) &&
+                        (current[1] - target[1]).abs == 1 &&
+                        current[0] == (current_player.color == 'white' ? 3 : 4) &&
+                        target[0] == (current_player.color == 'white' ? 2 : 5) &&
+                        current_board.piece_by_position(target).nil?
+
+    true
+  end
+
+  def valid_en_passant?(current, target)
+    return false if attempting_en_passant?(current, target) && !current_board.piece_by_position(current).en_passant
+
+    true
+  end
+
+  def remove_en_passant_pawn(target)
+    other_player.remove_piece([other_player.color == 'black' ? 3 : 4, target[1]])
+    current_board.current_board[other_player.color == 'black' ? 3 : 4][target[1]] = nil
   end
 
   def valid_move?(current, target)
@@ -155,6 +181,45 @@ class Game
   def first_move_update(target)
     if [King, Rook, Pawn].include? current_board.piece_by_position(target).class
       current_board.piece_by_position(target).first_move = false
+    end
+  end
+
+  def active_en_passant(target)
+    clean_previous_en_passant
+    current_board.current_board[current_player.color == 'black' ? 3 : 4].each do |piece|
+      if current_player.color == 'black' && !piece.nil? && piece.color == 'white' && piece.instance_of?(Pawn)
+        if current_board.piece_by_position(target).instance_of?(Pawn) && target[0] == 3 
+          if current_board.piece_by_position([3, target[1] - 1]).instance_of?(Pawn) &&
+             current_board.piece_by_position([3, target[1] - 1]).color == 'white'
+            current_board.piece_by_position([3, target[1] - 1]).en_passant = [2, target[1]]
+          end
+          if current_board.piece_by_position([3, target[1] + 1]).instance_of?(Pawn) &&
+             current_board.piece_by_position([3, target[1] + 1]).color == 'white'
+            current_board.piece_by_position([3, target[1] + 1]).en_passant = [2, target[1]]
+          end
+        end
+      end 
+
+      if current_player.color == 'white' && !piece.nil? && piece.color == 'black' && piece.instance_of?(Pawn)
+        if current_board.piece_by_position(target).instance_of?(Pawn) && target[0] == 4
+          if current_board.piece_by_position([4, target[1] - 1]).instance_of?(Pawn) &&
+             current_board.piece_by_position([4, target[1] - 1]).color == 'black'
+            current_board.piece_by_position([4, target[1] - 1]).en_passant = [5, target[1]]
+          end
+          if current_board.piece_by_position([4, target[1] + 1]).instance_of?(Pawn) &&
+             current_board.piece_by_position([4, target[1] + 1]).color == 'black'
+            current_board.piece_by_position([4, target[1] + 1]).en_passant = [5, target[1]]
+          end
+        end
+      end
+    end
+  end
+
+  def clean_previous_en_passant
+    current_board.current_board.each do |row|
+      row.each do |piece|
+        piece.en_passant = false if piece.instance_of?(Pawn)
+      end
     end
   end
 end
