@@ -71,7 +71,7 @@ describe Board do
     let(:queen_check) { instance_double(Queen) }
     let(:king_check) { instance_double(King) }
 
-    context 'when the other player king is in the current player pieces moves' do
+    context 'when the king is in check' do
       before do
         allow(player_one_check).to receive(:pieces).and_return([queen_check])
         allow(player_two_check).to receive(:players_king).and_return(king_check)
@@ -80,6 +80,40 @@ describe Board do
       end
       it 'returns true' do
         expect(board_check.check?(player_one_check, player_two_check)).to be true
+      end
+    end
+
+    context 'when the king is not in check' do
+      before do
+        allow(player_one_check).to receive(:pieces).and_return([queen_check])
+        allow(player_two_check).to receive(:players_king).and_return(king_check)
+        allow(player_one_check).to receive(:all_pieces_moves).and_return([[0, 0]])
+        allow(king_check).to receive(:position).and_return([0, 4])
+      end
+      it 'returns false' do
+        expect(board_check.check?(player_one_check, player_two_check)).to be false
+      end
+    end
+  end
+
+  describe '#piece_by_position' do
+    subject(:board_piece_by_position) { described_class.new }
+    let(:queen_check) { instance_double(Queen) }
+    context 'when there is a queen instance in the position' do
+      before do
+        board_piece_by_position.current_board[3][3] = queen_check
+      end
+      it 'returns the queen instance' do
+        expect(board_piece_by_position.piece_by_position([3, 3])).to be queen_check
+      end
+    end
+
+    context 'when the position is nil' do
+      before do
+        board_piece_by_position.current_board[3][3] = queen_check
+      end
+      it 'returns nil' do
+        expect(board_piece_by_position.piece_by_position([4, 4])).to be nil
       end
     end
   end
