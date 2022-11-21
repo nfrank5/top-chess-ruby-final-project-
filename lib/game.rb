@@ -40,9 +40,9 @@ class Game
   end
 
   def moving_pieces
-    until current_board.winner?(current_player) do
+    until winner? do
       successful_move = false
-      until successful_move do
+      until successful_move
         current_position_and_target = input_move
         successful_move = move(current_position_and_target[0], current_position_and_target[1])
       end
@@ -56,9 +56,28 @@ class Game
     end
   end
 
+  def winner?
+    return false unless current_board.check?(other_player, current_player)
+
+    current_player.pieces.each do |piece|
+      piece.moves.each do |move|
+        current = piece.position
+        temp = switch_positions(current, move)
+        update_game
+        no_winner = current_board.check?(other_player, current_player)
+        checkin_for_winner = true
+        undo_switch_positions(current, move, temp, checkin_for_winner)
+        update_game
+
+        return false unless  no_winner
+      end
+    end
+    true
+  end
+
   def input_move
     puts "#{current_player.name} choose a piece and move it selecting its origin and destiny" 
-    puts 'For example 64 44, write the row first then column'
+    puts 'For example 64 44, write the row first and then column'
     current_position_and_target = player_input(/^[0-7]{2} {1,3}[0-7]{2}$/, 'Please insert your move using two digits followed by a space and then two more digits')
     format_input_move(current_position_and_target)
   end
@@ -72,13 +91,12 @@ class Game
 
 
   def ending
-    1
+    puts "Ending: #{other_player.name} won!"
   end
 
   def move(current, target)
     castling = attempting_castling?(current, target)
     en_passant = attempting_en_passant?(current, target)
-
     if valid_en_passant?(current, target) && valid_move?(current, target) && valid_castling?(current, target) 
       temp = switch_positions(current, target)
       update_game
@@ -152,8 +170,8 @@ class Game
     current_board.piece_by_position(target)
   end
 
-  def undo_switch_positions(current, target, temp)
-    puts 'You can\'t move there: Check!'
+  def undo_switch_positions(current, target, temp, checkin_for_winner = false)
+    puts 'You can\'t move there: Check!' unless checkin_for_winner
     other_player.pieces.push(temp) unless temp.nil?
     current_board.piece_by_position(target).position = current
     current_board.current_board[target[0]][target[1]] = nil

@@ -49,7 +49,6 @@ class King < Piece
               @moves.push([7, 6])
             end
           end
-          
         end
       end
     end

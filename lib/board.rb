@@ -24,11 +24,6 @@ class Board
     !new_position[0].between?(0, 7) || !new_position[1].between?(0, 7)
   end
 
-
-  def winner?(current_player)
-    nil
-  end
-
   def piece_by_position(position)
     current_board[position[0]][position[1]]
   end
