@@ -6,8 +6,8 @@ require_relative './board'
 class Queen < Piece
   DIRECTIONS_QUEEN = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
 
-  def initialize(color)
-    super(color, color == 'white' ? [7, 3] : [0, 3], color == 'white' ? "\u2655" : "\u265B")
+  def initialize(color, position = (color == 'white' ? [7, 3] : [0, 3]))
+    super(color, position, color == 'white' ? "\u2655" : "\u265B")
   end
 
   def valid_moves(board)

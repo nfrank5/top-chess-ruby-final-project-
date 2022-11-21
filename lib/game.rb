@@ -2,17 +2,16 @@ require_relative '../lib/board'
 require_relative '../lib/player'
 require_relative '../lib/utilities'
 
+TOWER_MOVE_FOR_CASTLING = { [0, 2] => [[0, 0], [0, 3]],
+                            [0, 6] => [[0, 7], [0, 5]],
+                            [7, 2] => [[7, 0], [7, 3]],
+                            [7, 6] => [[7, 7], [7, 5]] }.freeze
+PASSING_KING_SQUARES_CASTLING = { [0, 2] => [0, 3],
+                                  [0, 6] => [0, 5],
+                                  [7, 2] => [7, 3],
+                                  [7, 6] => [7, 5] }.freeze
 
 class Game
-
-  TOWER_MOVE_FOR_CASTLING = { [0, 2] => [[0, 0], [0, 3]],
-                              [0, 6] => [[0, 7], [0, 5]],
-                              [7, 2] => [[7, 0], [7, 3]],
-                              [7, 6] => [[7, 7], [7, 5]] }.freeze
-  PASSING_KING_SQUARES_CASTLING = { [0, 2] => [0, 3],
-                                    [0, 6] => [0, 5],
-                                    [7, 2] => [7, 3],
-                                    [7, 6] => [7, 5] }.freeze
   include Utilities
   attr_reader :current_board, :player_one, :player_two, :current_player, :other_player
 
@@ -31,8 +30,8 @@ class Game
     clear_screen
     update_game
     current_board.print_board
-    moving_pieces
-    ending
+    type_of_end = moving_pieces
+    ending(type_of_end)
   end
 
   def introduction
@@ -40,7 +39,7 @@ class Game
   end
 
   def moving_pieces
-    until winner? do
+    until winner_stalemate? do
       successful_move = false
       until successful_move
         current_position_and_target = input_move
@@ -49,30 +48,30 @@ class Game
       first_move_update(current_position_and_target[1])
       active_en_passant(current_position_and_target[1])
       update_game
+      pawn_promotion
       switch_turn
       clear_screen
       puts "#{current_player.color.capitalize} King is in Check!" if current_board.check?(other_player, current_player)
       current_board.print_board
     end
+    winner_stalemate?
   end
 
-  def winner?
-    return false unless current_board.check?(other_player, current_player)
+  def winner_stalemate?
 
     current_player.pieces.each do |piece|
       piece.moves.each do |move|
         current = piece.position
         temp = switch_positions(current, move)
         update_game
-        no_winner = current_board.check?(other_player, current_player)
-        checkin_for_winner = true
-        undo_switch_positions(current, move, temp, checkin_for_winner)
+        there_is_no_scape = current_board.check?(other_player, current_player)
+        undo_switch_positions(current, move, temp, true)
         update_game
 
-        return false unless  no_winner
+        return false unless there_is_no_scape
       end
     end
-    true
+    current_board.check?(other_player, current_player) ? 'winner' : 'stalemate'
   end
 
   def input_move
@@ -90,8 +89,8 @@ class Game
   end
 
 
-  def ending
-    puts "Ending: #{other_player.name} won!"
+  def ending(type_of_end)
+    puts type_of_end == 'winner' ? "Ending: #{other_player.name} won!" : 'Stalemate'
   end
 
   def move(current, target)
@@ -239,6 +238,38 @@ class Game
         piece.en_passant = false if piece.instance_of?(Pawn)
       end
     end
+  end
+
+  def pawn_promotion
+    (current_board.current_board[0] + current_board.current_board[7]).any? do |piece|
+      if piece.instance_of?(Pawn)
+        selected = false
+        puts 'Select a Rook, Bishop, Queen or Knight'
+        until selected do
+          promote_to = player_input(/^[a-z]{4,6}$/i, "#{current_player.name} write the name of a piece to promote your pawn")
+          gets
+          case promote_to.downcase
+          when 'rook'
+            current_player.pieces.push(Rook.new(current_player.color, piece.position))
+            selected = true
+          when 'knight'
+            current_player.pieces.push(Knight.new(current_player.color, piece.position))
+            selected = true
+          when 'queen'
+            current_player.pieces.push(Queen.new(current_player.color, piece.position))
+            selected = true
+          when 'bishop'
+            current_player.pieces.push(Bishop.new(current_player.color, piece.position))
+            selected = true
+          else
+            selected == false
+          end
+          current_player.pieces.delete(piece)
+          update_game
+        end
+      end
+    end
+
   end
 end
 
