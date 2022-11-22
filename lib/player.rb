@@ -5,16 +5,11 @@ require_relative './rook'
 require_relative './pawn'
 require_relative './bishop'
 require_relative './knight'
-
-
-
-
-#require_relative './board'
-
+require_relative '../lib/input'
 
 class Player
   include Utilities
-
+  include Input
   attr_reader :color, :pieces, :name
 
   def initialize(color)

@@ -1,17 +1,6 @@
 module Utilities
-
   def clear_screen
     system('cls') || system('clear')
-  end
-
-  def player_input(regex, error_msg)
-    loop do
-      user_input = gets.chomp
-      verified_input = user_input if user_input.match?(regex)
-      return verified_input if verified_input
-
-      puts error_msg
-    end
   end
 end
 
