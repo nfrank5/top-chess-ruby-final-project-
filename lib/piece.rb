@@ -1,6 +1,7 @@
 class Piece
   attr_reader :unicode, :color, :moves
   attr_accessor :position
+
   def initialize(color, position, unicode)
     @color = color
     @unicode = unicode

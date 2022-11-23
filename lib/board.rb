@@ -14,6 +14,12 @@ class Board
     @current_board[destiny[0]][destiny[1]].nil?
   end
 
+  def all_empty?(squares)
+    squares.all? do |square|
+      empty?(square)
+    end
+  end
+
   def enemy_piece?(origin, destiny)
     return false if piece_by_position(destiny).nil?
 

@@ -2,6 +2,10 @@ module Utilities
   def clear_screen
     system('cls') || system('clear')
   end
+
+  def copy_array(arr)
+    arr.slice(0..-1)
+  end
 end
 
 class String
