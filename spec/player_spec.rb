@@ -27,12 +27,16 @@ describe Player do
 
   describe '#all_pieces_moves' do
     subject(:player_all_pieces_moves) { described_class.new('white') }
+    let(:king_all_pieces_moves) { instance_double(King, moves: [[1, 2], [3, 4]])}
+    let(:queen_all_pieces_moves) { instance_double(Queen, moves: [[5, 6], [7, 8]])}
+
     context 'when the game begins' do
       before do
+        allow(player_all_pieces_moves).to receive(:pieces).and_return([queen_all_pieces_moves, king_all_pieces_moves])
 
       end
-      xit 'returns the sum off all potential moves of the pieces' do
-   
+      it 'returns the sum off all potential moves of the pieces' do
+        expect(player_all_pieces_moves.all_pieces_moves).to match([[1, 2], [3, 4], [5, 6], [7, 8]])
       end
     end
   end

@@ -117,15 +117,4 @@ describe Board do
       end
     end
   end
-
-  describe '#winner?' do
-    subject(:board_winner) { described_class.new }
-    let(:player_winner) { instance_double(Player) }
-    context 'when there is a winner' do
-      xit 'returns true' do
-        expect(board_winner.winner?(player_winner)).to be true
-      end
-    end
-  end
-
 end
