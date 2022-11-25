@@ -11,9 +11,8 @@ module Input
   end
 
   def input_move
-    puts "#{current_player.name} choose a piece and move it selecting its origin and destiny" 
-    puts 'For example 64 44, write the row first and then column'
-    current_position_and_target = player_input(/^([0-7]{2} {1,3}[0-7]{2})$|^save$/i, 'Please insert your move using two digits followed by a space and then two more digits')
+    puts "It is #{current_player.name} turn."
+    current_position_and_target = player_input(/^([0-7]{2} {1,3}[0-7]{2})$|^save$/i, "Please insert your move using two digits (from) followed by a space and then two more digits (to)\nWrite the row first and then column")
     return current_position_and_target.downcase if current_position_and_target.downcase == 'save'
 
     format_input_move(current_position_and_target)
@@ -26,27 +25,37 @@ module Input
     end
   end
 
-  def select_pawn_promotion(current_player, piece)
+  def input_pawn_promotion(current_player)
     puts 'Select a Rook, Bishop, Queen or Knight'
-    selected = false
-    until selected do
-      promote_to = player_input(/^[a-z]{4,6}$/i, "#{current_player.name} write the name of a piece to promote your pawn")
-      case promote_to.downcase
-      when 'rook'
-        current_player.pieces.push(Rook.new(current_player.color, piece.position))
-        selected = true
-      when 'knight'
-        current_player.pieces.push(Knight.new(current_player.color, piece.position))
-        selected = true
-      when 'queen'
-        current_player.pieces.push(Queen.new(current_player.color, piece.position))
-        selected = true
-      when 'bishop'
-        current_player.pieces.push(Bishop.new(current_player.color, piece.position))
-        selected = true
-      else
-        selected == false
-      end
+    player_input(/^[a-z]{4,6}$/i, "#{current_player.name} write the name of a piece to promote your pawn").downcase
+  end
+
+  def confirm_save_game?
+    clear_screen
+    puts 'Do you want to save the game?(Y/N)'
+    player_input(/^[ynYN]$/, 'Write only one letter Y or N').downcase
+  end
+
+  def input_name_save_game
+    puts 'Enter a name to save the game(3 to 10 letters): '
+    player_input(/^[a-zA-Z0-9\-_]{3,10}$/, 'Only letters, numbers, dash(-) and underscore(_)')
+  end
+
+  def confirm_load_game?
+    puts 'Do you want to load a saved Game?(Y/N)'
+    ans = player_input(/^[ynYN]$/, 'Input just one letter "Y" for Yes or "N" for No')
+    ans == 'y'
+  end
+
+  def print_saved_games
+    puts 'Saved Games:'
+    Dir.glob('./lib/saved-games/*.yml').each_with_index do |file, i|
+      puts "#{i + 1} - #{file.split('/')[3].split('.')[0]}"
     end
+  end
+
+  def select_number_saved_games
+    puts 'Write the number of the game you want to load'
+    player_input(/^[0-9]$/, 'Please write the exact number of the game').to_i
   end
 end
