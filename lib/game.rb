@@ -6,7 +6,6 @@ require_relative '../lib/input'
 require_relative '../lib/castling'
 require_relative '../lib/data'
 
-
 class Game
   include Utilities
   include EnPassant
@@ -38,23 +37,29 @@ class Game
 
   def introduction
     puts 'Welcome to Chess by Nfrank5!'
-    puts 'If you want to save during the game write "Save" instead of a move'
+    puts 'If you want to save the game write "Save" instead of a move'
+    puts 'Choose a piece and move it selecting its origin and destiny' 
+    puts 'For example 64 44, write the row first and then column'
   end
 
   def moving_pieces
-    until continue_game?
-      successful_move = false
-      until successful_move
-        current_position_and_target = input_move
-        if current_position_and_target == 'save'
-          save_games
-          next
+    catch(:stop) do
+      until stop_game?
+        successful_move = false
+        until successful_move
+          current_position_and_target = input_move
+          if current_position_and_target == 'save'
+            throw :stop if save_games
+
+            current_board.print_board
+            next
+          end
+          successful_move = move(current_position_and_target[0], current_position_and_target[1])
         end
-        successful_move = move(current_position_and_target[0], current_position_and_target[1])
+        checks_and_updates_after_move(current_position_and_target[1])
       end
-      checks_and_updates_after_move(current_position_and_target[1])
+      stop_game?
     end
-    continue_game?
   end
 
   def checks_and_updates_after_move(target)
@@ -72,7 +77,7 @@ class Game
     puts "#{current_player.color.capitalize} King is in Check!" if current_board.check?(other_player, current_player)
   end
 
-  def continue_game?
+  def stop_game?
     current_player.pieces.each do |piece|
       piece.moves.each do |move|
         there_is_no_scape = temp_position_to_verify_check(piece, move)
@@ -91,7 +96,7 @@ class Game
   end
 
   def ending(type_of_end)
-    puts type_of_end == 'winner' ? "Ending: #{other_player.name} won!" : 'Stalemate'
+    (puts type_of_end == 'winner' ? "Ending: #{other_player.name} won!" : 'Stalemate') if type_of_end
   end
 
   def move(current, target)
@@ -99,14 +104,19 @@ class Game
     en_passant = attempting_en_passant?(current, target)
     if valid_en_passant?(current, target) && valid_move?(current, target) && valid_castling?(current, target) 
       temp = switch_positions(current, target)
-      unless current_board.check?(other_player, current_player)
-        switch_positions(TOWER_MOVE_FOR_CASTLING[target][0], TOWER_MOVE_FOR_CASTLING[target][1]) if castling
-        remove_en_passant_pawn_from_board(target) if en_passant
-        return true
-      end
+      return true if not_in_check_verification_and_moves(target,castling, en_passant)
+
       undo_switch_positions(current, target, temp)
     end
     false
+  end
+
+  def not_in_check_verification_and_moves(target,castling, en_passant)
+    return false if current_board.check?(other_player, current_player)
+
+    switch_positions(TOWER_MOVE_FOR_CASTLING[target][0], TOWER_MOVE_FOR_CASTLING[target][1]) if castling
+    remove_en_passant_pawn_from_board(target) if en_passant
+    true
   end
 
   def update_game
@@ -161,22 +171,26 @@ class Game
   end
 
   def first_move_update(target)
-    if [King, Rook, Pawn].include? current_board.piece_by_position(target).class
-      current_board.piece_by_position(target).first_move = false
-    end
+    return unless [King, Rook, Pawn].include? current_board.piece_by_position(target).class
+
+    current_board.piece_by_position(target).first_move = false
   end
 
   def pawn_promotion
-    (current_board.current_board[0] + current_board.current_board[7]).any? do |piece|
-      if piece.instance_of?(Pawn)
-        select_pawn_promotion(current_player, piece)
-        current_player.pieces.delete(piece)
-        update_game
-      end
+    old_piece = verify_pawns_in_last_row 
+    return unless old_piece
+
+    current_player.promoted_pawn_creation(old_piece)
+    update_game
+  end
+
+  def verify_pawns_in_last_row
+    top_and_bottom_rows.any? do |piece|
+      return piece if piece.instance_of?(Pawn)
     end
   end
+
+  def top_and_bottom_rows
+    current_board.current_board[0] + current_board.current_board[7]
+  end
 end
-
-
-
-
