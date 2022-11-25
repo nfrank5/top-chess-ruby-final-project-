@@ -41,7 +41,7 @@ class Pawn < Piece
 
   def double_step?(direction, board, new_position)
     first_move && [[-2, 0], [2, 0]].include?(direction) && board.empty?(new_position) &&
-            board.empty?(color == 'white' ? [5, new_position[1]] : [2, new_position[1]])
+      board.empty?(color == 'white' ? [5, new_position[1]] : [2, new_position[1]])
   end
 
   def pawn_taking(direction, board, position, new_position)
