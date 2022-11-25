@@ -7,6 +7,8 @@ require_relative './bishop'
 require_relative './knight'
 require_relative '../lib/input'
 
+PAWN_PROMOTION_CLASSES = { rook: Rook, knight: Knight, queen: Queen, bishop: Bishop}.freeze
+
 class Player
   include Utilities
   include Input
@@ -67,4 +69,16 @@ class Player
       piece.valid_moves(board)
     end
   end
+
+  def promoted_pawn_creation(old_piece)
+    selected = 'non_existent'
+    selected = input_pawn_promotion(self) while PAWN_PROMOTION_CLASSES[selected.to_sym].nil?
+    create_piece(PAWN_PROMOTION_CLASSES[selected.to_sym], color, old_piece.position)
+    pieces.delete(old_piece)
+  end
+
+  def create_piece(type_of_piece, color, position)
+    pieces.push(type_of_piece.new(color, position))
+  end
 end
+
